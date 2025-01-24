@@ -1,16 +1,25 @@
-console.log("'Ello Govnah!");
+console.log("'Ello Gov'nah!");
 
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron/main')
+const path = require('node:path')
+const auth = require('./auth.js');
+const server = require('./backend/backend-main.js');
 
+console.log(auth.token);
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
-    height: 600
+    height: 600,
+    webPreferences: {
+        preload: path.join(__dirname, 'preload.js')
+      }
   })
 
-  win.loadFile('index.html')
+  win.loadFile('./frontend/index.html')
 }
 
 app.whenReady().then(() => {
   createWindow()
+  ipcMain.handle('ping', () => 'pong')
+  server.initServerMain(auth.token)
 })
