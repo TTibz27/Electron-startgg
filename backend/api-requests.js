@@ -1,6 +1,11 @@
+const { closeSync } = require("original-fs");
 
 var msg = 'Hello World';
 console.log(msg);
+
+
+let lastEventID = null;
+let lastPhaseID = null;
 
 
 let query = /* GraphQL */ `
@@ -16,7 +21,7 @@ query getEventId($slug: String) {
 
 
 let variables = {
-    "slug": "tournament/the-jeekly-38/event/guilty-gear-strive-hosted-by-the-jeekly"
+    "slug": "null"
   }
 
 
@@ -123,7 +128,13 @@ const getSetsFromPhaseVars=
  // -----------------------------------------------------------------------------------------------------------------------------------   
 
   // ---- Get Event ID ---- //
-function pollAllData( authToken){
+function pollTop8Data(authToken, slug){
+  if (slug == null){
+    console.error("Error: no slug provided.")
+    return;
+  }
+
+  variables.slug = slug;
   fetch('https://api.start.gg/gql/alpha', {
     method: 'POST',
     headers: 
@@ -143,6 +154,8 @@ function pollAllData( authToken){
         console.log(date.toString());
         console.log("---------------------------------------------------------------------");
         getPhasesinEventVars.eventId =rsp.data.event.id;
+
+        lastEventID = rsp.data.event.id;
 
           // ---- Get All Phases ---- //
         fetch('https://api.start.gg/gql/alpha', {
@@ -168,6 +181,7 @@ function pollAllData( authToken){
                     }
                     console.log("Using phase: " + currentPhase.name);
                   getSetsFromPhaseVars.phaseId = currentPhase.id;
+                  lastPhaseID = currentPhase.id;
 ///-----------------------------------------------------------------------------------------------------------///  
 
 
@@ -192,9 +206,9 @@ function pollAllData( authToken){
               console.log("------------------");
               let outstring = "";
               for (let slot of set.slots){
-               outstring +=  slot.entrant.name + " - " + slot.standing.stats.score.value + "       ";
+                if(slot.entrant) outstring +=  slot.entrant.name + " - " + slot.standing.stats.score.value + "       ";
               }
-
+              
               console.log(outstring);
               console.log("------------------")
             }         
@@ -205,6 +219,43 @@ function pollAllData( authToken){
             });
         
     });
+}
+
+
+function updateTop8(authToken){
+  getSetsFromPhaseVars.phaseId = lastPhaseID;
+  fetch('https://api.start.gg/gql/alpha', {
+    method: 'POST',
+    headers: 
+    { 
+        "Authorization": "Bearer " + authToken
+    }
+    ,
+    body: JSON.stringify({ query: getSetsFromPhase, variables: getSetsFromPhaseVars}) ,
+    })
+    .then((r) => r.json())
+    .then((rsp) => {
+      console.log("");
+      console.log('////////////////////////////////UPDATED NEW SET///////////////////////////////////////');
+      let date = Date.now();
+      console.log(date.toString());
+      const sets = rsp.data.phase.sets.nodes;
+
+      for (let set of sets){
+        console.log("------------------");
+        console.log(set.fullRoundText);
+        console.log("------------------");
+        let outstring = "";
+        for (let slot of set.slots){
+          if(slot.entrant) outstring +=  slot.entrant.name + " - " + slot.standing.stats.score.value + "       ";
+        }
+        
+        console.log(outstring);
+        console.log("-------------------");
+      }         
+
+      console.log('//////////////////////////////////////////////////////////////////////////////////////');
+    } );
 }
 
 
@@ -253,4 +304,7 @@ function pollAllData( authToken){
 
 
  
-  module.exports = {pollAllData: pollAllData};
+  module.exports = {
+    pollTop8Data: pollTop8Data,
+    updateTop8: updateTop8
+  };

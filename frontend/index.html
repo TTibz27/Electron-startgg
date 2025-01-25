@@ -5,17 +5,24 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
+      content="default-src 'self'; script-src 'self';  connect-src 'self' ws:;"
+     
     />
     <meta
       http-equiv="X-Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"
     />
+
+    
+
     <title>Hello from Electron renderer!</title>
   </head>
   <body>
     <h1>Hello from Electron renderer!</h1>
-    <p>👋</p>
+
+    <input name="Start.GG url" type="text" id="UserEnteredURL"/>
+    <button id="pullTop8Button"> Click to pull data</button>
+ 
   </body>
   <script src="./renderer.js"></script>
 </html>

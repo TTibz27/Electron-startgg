@@ -14,5 +14,13 @@
   },
   "dependencies": {
     "ws": "^8.18.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TTibz27/Electron-startgg.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TTibz27/Electron-startgg/issues"
+  },
+  "homepage": "https://github.com/TTibz27/Electron-startgg#readme"
 }
