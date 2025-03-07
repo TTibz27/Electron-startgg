@@ -5,7 +5,8 @@ console.log(msg);
 
 
 let lastEventID = null;
-let lastPhaseID = null;
+let eventPhases = null;
+let Top8PhaseID = null;
 
 
 let query = /* GraphQL */ `
@@ -118,12 +119,36 @@ const getSetsFromPhase =
   }
 },
 `;
-const getSetsFromPhaseVars=  
+const getSetsFromPhaseVars =  
 {
 "phaseId":1821663,
 "page": 1,
 "perPage": 10
 };
+
+
+const getSetEntrantsQuery = `query SetEntrants($setId: ID!) {
+  set(id: $setId) {
+    id
+    stream{
+      id
+      streamName
+    }
+    slots {
+      id
+      entrant {
+        id
+        name
+        participants {
+          id
+          gamerTag
+          connectedAccounts
+        
+        }
+      }
+    }
+  }
+},`;
 
  // -----------------------------------------------------------------------------------------------------------------------------------   
 
@@ -169,7 +194,10 @@ function pollTop8Data(authToken, slug){
           })
             .then((r) => r.json())
             .then((rsp) => {
+                
+
                 if(rsp.data?.event?.phases?.length > 0){
+                   let eventPhases = rsp.data.event.phases;
                    let currentPhase = {
                     id: -1,
                     phaseOrder: -1
@@ -181,7 +209,7 @@ function pollTop8Data(authToken, slug){
                     }
                     console.log("Using phase: " + currentPhase.name);
                   getSetsFromPhaseVars.phaseId = currentPhase.id;
-                  lastPhaseID = currentPhase.id;
+                  Top8PhaseID = currentPhase.id;
 ///-----------------------------------------------------------------------------------------------------------///  
 
 
@@ -223,7 +251,7 @@ function pollTop8Data(authToken, slug){
 
 
 function updateTop8(authToken){
-  getSetsFromPhaseVars.phaseId = lastPhaseID;
+  getSetsFromPhaseVars.phaseId = Top8PhaseID;
   fetch('https://api.start.gg/gql/alpha', {
     method: 'POST',
     headers: 
@@ -259,6 +287,11 @@ function updateTop8(authToken){
 }
 
 
+
+
+function GetAllSets(token, setId){
+  
+}
 
 
   // ---------------------------------Original Query to get top 8 placements -------------------------
