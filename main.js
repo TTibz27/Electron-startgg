@@ -15,7 +15,7 @@ const createWindow = () => {
       }
   })
 
-  win.loadFile('./frontend/index.html')
+  win.loadFile('./frontend/angularFrontEnd/dist/angular-front-end/browser/index.html')
 }
 
 app.whenReady().then(() => {
@@ -23,3 +23,5 @@ app.whenReady().then(() => {
   ipcMain.handle('ping', () => 'pong')
   server.initServerMain(auth.token)
 })
+
+

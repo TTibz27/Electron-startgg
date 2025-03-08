@@ -12,15 +12,29 @@ const func = async () => {
 
   func()
 
-const socket = new WebSocket('ws://localhost:7071');
+const backendSocket = new WebSocket('ws://localhost:7071');
+
 
 // Event handlers
-socket.onopen = () => {
-  console.log('WebSocket connected');
-  socket.send(JSON.stringify({
+backendSocket.onopen = () => {
+  console.log('Backend connected');
+  backendSocket.send(JSON.stringify({
     requestType:"ConnectedConfirmation",
   })); 
 };
+
+
+const gameSocket = new WebSocket('ws://localhost:6615');
+gameSocket.onopen = () => {
+  console.log('Game Feed connected');
+  gameSocket.send(JSON.stringify({
+    requestType:"ConnectedConfirmation",
+  })); 
+};
+
+gameSocket.onmessage =(msg)=>{
+  console.log(msg.data);
+}
 
 window.onload = viewInit();
 
@@ -36,21 +50,21 @@ function viewInit(){
 function getDataFromServer(){
 
 
-  const url = document.getElementById("UserEnteredURL").value;// "https://www.start.gg/tournament/frosty-faustings-xiv-2022/event/guilty-gear-strive/overview";
+    const url = document.getElementById("UserEnteredURL").value;// "https://www.start.gg/tournament/frosty-faustings-xiv-2022/event/guilty-gear-strive/overview";
 
-  if(!url){
-    console.log("No URL, not sending");
-    return;
-  }
-  else{
-    console.log("Entered URL - " + url );
-  }
-  console.log("Sending message from UI....")
-  socket.send(JSON.stringify({
-    requestType:"getTop8Data",
-    slug: getSlugFromURL(url)
-  }));
-  console.log("sent");
+    if(!url){
+      console.log("No URL, not sending");
+      return;
+    }
+    else{
+      console.log("Entered URL - " + url );
+    }
+    console.log("Sending message from UI....")
+    socket.send(JSON.stringify({
+      requestType:"getTop8Data",
+      slug: getSlugFromURL(url)
+    }));
+    console.log("sent");
 }
 
 

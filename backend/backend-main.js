@@ -1,7 +1,8 @@
 const apiRequests = require('./api-requests');
 const WebSocket = require('ws');
+const { initGameSocket } = require('./game-feed');
 let authToken;
-const wss = new WebSocket.Server({ port: 7071 });
+const frontendWss = new WebSocket.Server({ port: 7071 });
 const clients = new Map(); // holds all active WS connections
 
 
@@ -9,7 +10,7 @@ const clients = new Map(); // holds all active WS connections
 let latestTop8Data = null;
 
 // init server
-wss.on('connection', (ws) => {
+frontendWss.on('connection', (ws) => {
     
     const id = Date.now();
     const color = Math.floor(Math.random() * 360);
@@ -20,23 +21,11 @@ wss.on('connection', (ws) => {
     };
 });
 
-
-
 // inits after main.js call
 function initServerMain(token){
     console.log("init server main");
     authToken = token;
-   // apiRequests.pollAllData(authToken);
-
-}
-
-function startTop8Data(){
-    latestTop8Data = apiRequests.pollTop8Data(authToken, request.slug);
-    const top8UpdateTimer = setInterval(updateTop8, 60 * 1000);
-}
-
-function updateTop8() {
- apiRequests.updateTop8(authToken);
+   initGameSocket();
 }
 
 function handleWsMessage(msg){
@@ -52,6 +41,15 @@ function handleWsMessage(msg){
             startTop8Data();
         }
     }
+}
+
+function startTop8Data(){
+    latestTop8Data = apiRequests.pollTop8Data(authToken, request.slug);
+    const top8UpdateTimer = setInterval(updateTop8, 60 * 1000);
+}
+
+function updateTop8() {
+ apiRequests.updateTop8(authToken);
 }
 
 
