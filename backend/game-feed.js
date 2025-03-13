@@ -34,7 +34,7 @@ function initGameSocket(){
     }
 
     gameSocket.onerror = (msg) => {
-        console.log("unable to connect, retrying in " + retryInterval +"ms");
+        console.log("unable to connect to game socket, retrying in " + retryInterval +"ms");
         setTimeout(initGameSocket, retryInterval);
     }
 }

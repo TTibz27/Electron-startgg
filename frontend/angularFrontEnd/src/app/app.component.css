@@ -1,0 +1,17 @@
+.topStatusBar{
+  height: 40px;
+}
+.section{
+  padding-left: 20px;
+
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ffffff;
+}
+
+.jeeklogo{
+  height: 150px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}

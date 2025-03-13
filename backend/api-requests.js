@@ -1,4 +1,5 @@
 const { closeSync } = require("original-fs");
+const {data_top8Data} = require("./api_requested_data");
 
 var msg = 'Hello World';
 console.log(msg);
@@ -95,10 +96,12 @@ const getSetsFromPhase =
       nodes {  
         id
         fullRoundText
+        identifier
         round
         winnerId
         slots {
           id
+          slotIndex
           entrant {
             id
             name
@@ -153,10 +156,13 @@ const getSetEntrantsQuery = `query SetEntrants($setId: ID!) {
  // -----------------------------------------------------------------------------------------------------------------------------------   
 
   // ---- Get Event ID ---- //
-function pollTop8Data(authToken, slug){
+function pollTop8Data(authToken, slug, callback = null){
   if (slug == null){
-    console.error("Error: no slug provided.")
-    return;
+    console.error("Error: no slug provided.");
+      if ( typeof callback === 'function'){
+          callback(false);
+      }
+    return false;
   }
 
   variables.slug = slug;
@@ -194,8 +200,6 @@ function pollTop8Data(authToken, slug){
           })
             .then((r) => r.json())
             .then((rsp) => {
-                
-
                 if(rsp.data?.event?.phases?.length > 0){
                    let eventPhases = rsp.data.event.phases;
                    let currentPhase = {
@@ -223,30 +227,40 @@ function pollTop8Data(authToken, slug){
           body: JSON.stringify({ query: getSetsFromPhase, variables: getSetsFromPhaseVars}) ,
           })
           .then((r) => r.json())
-          .then((rsp) => {
+              .then((rsp) => {
 
-            const sets = rsp.data.phase.sets.nodes;
+                const sets = rsp.data.phase.sets.nodes;
 
-            for (let set of sets){
-              console.log("  ");
-              console.log("------------------");
-              console.log(set.fullRoundText);
-              console.log("------------------");
-              let outstring = "";
-              for (let slot of set.slots){
-                if(slot.entrant) outstring +=  slot.entrant.name + " - " + slot.standing.stats.score.value + "       ";
+                for (let set of sets){
+                      console.log("  ");
+                      console.log("------------------");
+                      console.log(set.fullRoundText);
+                      console.log("------------------");
+                      let outstring = "";
+                  
+                  for (let slot of set.slots){
+                    if(slot.entrant) outstring +=  slot.entrant.name + " - " + slot.standing.stats.score.value + "       ";
+                  }
+
+                  console.log(outstring);
+                  console.log("------------------");
+                }
+
+              if ( typeof callback === 'function'){
+                  callback(true);
               }
-              
-              console.log(outstring);
-              console.log("------------------")
-            }         
-          } );
+          }
+
+
+
+          );
 
 ////--------------------------------------------------------------------------------------------------------/////
                   }
             });
         
     });
+
 }
 
 
@@ -269,15 +283,68 @@ function updateTop8(authToken){
       console.log(date.toString());
       const sets = rsp.data.phase.sets.nodes;
 
+
       for (let set of sets){
         console.log("------------------");
-        console.log(set.fullRoundText);
+        console.log(set.fullRoundText + " - " + set.identifier);
         console.log("------------------");
         let outstring = "";
+
+       const setSummary = {
+          player1_name: "",
+          player1_score:null,
+          player2_name: "",
+          player2_score:null
+      };
         for (let slot of set.slots){
-          if(slot.entrant) outstring +=  slot.entrant.name + " - " + slot.standing.stats.score.value + "       ";
+          if(slot.entrant){    
+            outstring += "(" + slot.slotIndex +") " + slot.entrant.name + " - " + slot.standing.stats.score.value + "  |   " ;
+            if (slot.slotIndex == 0){ // hopefully this doesnt go rogue from falsey values
+              setSummary.player1_name = slot.entrant.name;
+              setSummary.player1_score = slot.standing.stats.score.value;
+            }
+            if(slot.slotIndex == 1){
+              setSummary.player2_name = slot.entrant.name;
+              setSummary.player2_score = slot.standing.stats.score.value;
+            }
+          }        
         }
         
+        switch (set.identifier){
+          case "A":
+            data_top8Data.winner_sf_1 = setSummary;
+            break;
+          case "B":
+            data_top8Data.winner_sf_2 = setSummary;
+            break;
+          case "C":
+            data_top8Data.winner_final = setSummary;
+            break;
+          case "D":
+            data_top8Data.grand_final = setSummary;
+            break;
+          case "F":
+            data_top8Data.loser_rd_1_1  = setSummary;
+            break;
+          case "G":
+            data_top8Data.loser_rd_1_2  = setSummary;
+            break;
+          case "H":
+            data_top8Data.loser_qf_1  = setSummary;
+            break;
+          case "I":
+            data_top8Data.loser_qf_2  = setSummary;
+            break;
+          case "J":
+            data_top8Data.loser_sf  = setSummary;
+            break;
+          case "K":
+            data_top8Data.loser_final  = setSummary;
+            break;
+        }   
+
+
+     
         console.log(outstring);
         console.log("-------------------");
       }         
