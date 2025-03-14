@@ -126,7 +126,7 @@ const getSetsFromPhaseVars =
 {
 "phaseId":1821663,
 "page": 1,
-"perPage": 10
+"perPage": 12
 };
 
 
@@ -291,6 +291,7 @@ function updateTop8(authToken){
         let outstring = "";
 
        const setSummary = {
+          set_id: set.identifier,
           player1_name: "",
           player1_score:null,
           player2_name: "",
@@ -322,6 +323,9 @@ function updateTop8(authToken){
             break;
           case "D":
             data_top8Data.grand_final = setSummary;
+            break;
+          case "E":
+            data_top8Data.grand_final_reset = setSummary;
             break;
           case "F":
             data_top8Data.loser_rd_1_1  = setSummary;

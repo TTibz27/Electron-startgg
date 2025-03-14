@@ -2,3 +2,4 @@ auth.js
 /node_modules
 package-lock.json
 .idea
+/jeeklyMissionControl-win32-x64/

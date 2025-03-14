@@ -1,0 +1,16 @@
+<div>
+  <div [ngClass]="isApiRequestRunning? 'headerDivRunning':'headerDiv'"> Start GG Connection</div>
+  <div [hidden]="isApiRequestRunning">
+    <input [(ngModel)]="startggURL">
+    <button type="submit" (click)="submitURL()"> Connect to start GG</button>
+  </div>
+  <div *ngIf="isApiRequestRunning">
+    <div>
+      StartGG API connected!
+    </div>
+    <div>last update : {{lastUpdateDuration}} seconds</div>
+    <div> <span class="captureSourceLabel">Top 8 capture source: </span>  <input id="Top8UrlSpan" value="{{top8URL}}" />  <button (click)="copyTop8()">Copy</button> </div>
+  </div>
+</div>
+
+

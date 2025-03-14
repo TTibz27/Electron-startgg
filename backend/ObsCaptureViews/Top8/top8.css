@@ -1,0 +1,88 @@
+.setContainer {
+    margin: 5px;
+    padding: 3px;
+
+}
+body {
+    background-image: url('img.png');
+    background-repeat: no-repeat;
+}
+
+.setContainer{
+    height: 135px;
+    width: 403px;
+    background-image: url('img_1.png');
+    background-repeat: no-repeat;
+    color: #fefefe;
+    text-shadow:1px 1px 5px #5D5C5C, 1px 1px 5px #3D3C3C;
+    /*Font*/
+    font-family: "League Gothic", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: italic;
+    font-variation-settings: "wdth" 100;
+    font-size: 32px;
+}
+
+.bracket{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.league-gothic-text {
+
+                }
+
+.doubleRound{
+    position: relative;
+}
+
+.singleRound{
+    margin-top:68px;
+    position: relative;
+}
+#winnersBracket{
+    margin-top:20%
+}
+#losersBracket {
+    margin-top:4%;
+}
+.playerContainer{
+    margin-left: 70px;
+
+}
+.player1Container{
+    margin-top: 5px;
+}
+.player2Container{
+    margin-top: 38px;
+}
+.score{
+    float:right;
+    margin-right:35px;
+}
+.lossIndication{
+    color: #a3a3a3;
+}
+.roundTitle{
+    color: #fefefe;
+    /*Font*/
+    font-family: "League Gothic", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: italic;
+    font-variation-settings: "wdth" 100;
+    font-size: 32px;
+    position: absolute;
+    left: 140px;
+
+}
+.doubleRound .roundTitle{
+    top:-48px
+}
+.singleRound .roundTitle{
+    top:-116px;
+}
+.HideGFR{
+    visibility: hidden;
+}

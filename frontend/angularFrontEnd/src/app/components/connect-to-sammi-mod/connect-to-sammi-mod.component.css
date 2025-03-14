@@ -1,0 +1,8 @@
+.headerDiv{
+  font-size: 30px;
+  font-weight: bolder;
+  font-family: fantasy;
+  color: #f10505;
+  -webkit-text-stroke: 1px #191919;
+  margin-bottom: 15px;
+}

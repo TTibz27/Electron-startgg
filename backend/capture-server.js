@@ -9,9 +9,11 @@ function initCaptureServers(){
     //app.use(express.static(path.join(__dirname, '/ObsCaptureViews/Top8/')));
 
 //Handle requests to the root URL
+
     app.get('/' , (req, res) => {
         res.sendFile(path.join(__dirname, '/ObsCaptureViews/', '404.html'));
     });
+    app.use('/top8', express.static(path.join(__dirname, '/ObsCaptureViews/Top8/')));
     app.get('/top8', (req, res) => {
         res.sendFile(path.join(__dirname, '/ObsCaptureViews/Top8/', 'index.html'));
     });
