@@ -17,6 +17,16 @@ const MESSAGE_TEMPLATE= {
     top8: "Top 8 data"
 }
 
+// valid request / reply values
+const request_or_reply = {
+
+    api_service_name: ["ALL", "GOOGLE", "STRIVE"], // for API CONNECT REQUEST/REPLYS.
+                     // ALL can request everything at connection,Frontend sends ALL, Backend sends back individual per service.
+    slug: "string of slug for startgg"
+
+}
+
+
 const top8 = {
     loser_rd_1_1: {
         player1_name: "Name",

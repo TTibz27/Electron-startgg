@@ -13,10 +13,11 @@ const top8refreshInterval = 1;
 
 // hold onto data here
 let isStartGGPollingActive = false;
+let isGoogleSheetsAuthed = false;
+let isStriveConnected = false;
 
 // init server
 frontendWss.on('connection', (ws) => {
-    
     const id = Date.now();
 
     clients.set(id, ws);
@@ -31,11 +32,14 @@ function initServerMain(token){
     authToken = token;
    initGameSocket();
    initCaptureServers();
-   initGoogleSheets();
+   initGoogleSheets().then(
+        ()=>{ console.log("Auth successful!");
+          sendGoogleAuthMessage(true);
+        }).catch(console.error);
 }
 
 function handleWsMessage(rawMessage, ws){
-    console.log("mesage recieved");
+    console.log("message received");
     if(! rawMessage?.data) {
         console.error("no data found in mesage");
         return;
@@ -50,6 +54,15 @@ function handleWsMessage(rawMessage, ws){
                    success: success
                }));
            });
+        }
+    }
+    if (msg.type === MessageType.API_CONNECT_REQUEST){
+        if (msg.request?.api_service_name === "ALL") {
+            // Add in updates for all other requests
+            sendGoogleAuthMessage();
+        }
+        else if (msg.request?.api_service_name === "GOOGLE"){
+            sendGoogleAuthMessage();
         }
     }
 }
@@ -82,6 +95,19 @@ function updateTop8() {
     });
 }
 
+function sendGoogleAuthMessage(){
+    console.log("sending google auth reply");
+    clients.forEach((ws)=> {
+        ws.send(
+            JSON.stringify({
+                type: MessageType.API_CONNECT_REPLY,
+                reply: {api_service_name: "GOOGLE"},
+                success: isGoogleSheetsAuthed
+            })
+        );
+    });
+    //setInterval(()=>{sendGoogleAuthMessage,2000);
+}
 
 module.exports = {
     initServerMain:initServerMain

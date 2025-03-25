@@ -22,12 +22,13 @@ export class BackendSocketServiceService {
         type : MessageTypeEnum.FRONTEND_CONNECT_CONFIRMATION,
       }));
       this.backendSocket.onmessage = (msg) => {
-       // console.log(msg);
+        console.log(msg);
         this._backendWsSubject.next(JSON.parse(msg.data));
-      }
+      };
+      // get latest update now that socket connection exists
+      this.sendAllApiStatusRequest();
     };
    }
-
 
    public test(){
     console.log("test");
@@ -55,6 +56,23 @@ export class BackendSocketServiceService {
     console.log("sent");
   }
 
+  public sendAllApiStatusRequest() {
+    this.backendSocket.send(JSON.stringify({
+      type: MessageTypeEnum.API_CONNECT_REQUEST,
+      request: {
+        api_service_name: "ALL"
+      }
+    }));
+  }
+
+  public sendGoogleApiStatusRequest() {
+    this.backendSocket.send(JSON.stringify({
+      type: MessageTypeEnum.API_CONNECT_REQUEST,
+      request: {
+        api_service_name: "GOOGLE"
+      }
+    }));
+  }
   private getSlugFromURL(fullURL: string) :string|null{
     console.log("CHONKIN");
     const urlChunks = fullURL.split("/");

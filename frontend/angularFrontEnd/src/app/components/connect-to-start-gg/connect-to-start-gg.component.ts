@@ -24,6 +24,7 @@ export class ConnectToStartGGComponent implements OnInit{
   public lastUpdateDuration: number;
   private lastRecievedTime: number;
   public readonly top8URL = " http://localhost:2369/top8/";
+
   constructor(private socketService: BackendSocketServiceService){
     this.startggURL = "";
     this.isApiRequestRunning = false;

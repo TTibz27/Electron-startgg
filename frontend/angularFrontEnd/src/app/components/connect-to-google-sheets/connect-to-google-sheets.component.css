@@ -6,3 +6,13 @@
   -webkit-text-stroke: 1px #191919;
   margin-bottom: 15px;
 }
+
+.headerDivRunning{
+  font-size: 40px;
+  font-weight: bolder;
+  font-family: fantasy;
+  color: #0000fc;
+  -webkit-text-stroke: 1px #ffffff;
+  margin-bottom: 15px;
+  paint-order: stroke fill;
+}

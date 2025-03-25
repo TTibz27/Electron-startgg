@@ -1,3 +1,7 @@
 
-<div class="headerDiv"> Google Sheets Connection</div>
-<div> Not Available at this time </div>
+<div [ngClass]="isGoogleAuthed? 'headerDivRunning':'headerDiv'">  Google Sheets Connection</div>
+@if (isGoogleAuthed) {
+  <div>Google Has been Authenticated. Add in new buttons to control google sheets!</div>
+} @else {
+<div> This should have a button to reconnect to google. </div>
+}

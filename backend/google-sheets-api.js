@@ -12,14 +12,11 @@ const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
 // created automatically when the authorization flow completes for the first
 // time.
 const TOKEN_PATH = path.join(process.cwd(), 'token.json');
-const CREDENTIALS_PATH = path.join(process.cwd(), 'credentials.json');
+const CREDENTIALS_PATH = path.join(process.cwd(), 'google-credentials.json');
 
+let Authorized = false;
 
-
-function initGoogleSheets() {
-
-
-
+async function initGoogleSheets() {
 
     /**
      * Reads previously authorized credentials from the save file.
@@ -97,11 +94,7 @@ function initGoogleSheets() {
         });
     }
     console.log("Auth google sheets started");
-    authorize().then(
-        ()=>{ console.log("Auth successful!");
-    }).catch(console.error);//.then(listMajors).catch(console.error);
-
-
+   return authorize();//.then(listMajors).catch(console.error);
 }
 
 module.exports = {
