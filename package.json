@@ -13,8 +13,10 @@
     "electron": "^34.0.1"
   },
   "dependencies": {
+    "@google-cloud/local-auth": "^2.1.0",
     "electron-context-menu": "^4.0.5",
     "express": "^4.21.2",
+    "googleapis": "^105.0.0",
     "ws": "^8.18.0"
   },
   "repository": {

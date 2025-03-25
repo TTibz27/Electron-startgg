@@ -4,6 +4,7 @@ const { initGameSocket } = require('./game-feed');
 const {MessageType} = require ('./message-type-enum');
 const {initCaptureServers} = require("./capture-server");
 const {data_top8Data} = require("./api_requested_data");
+const {initGoogleSheets} = require("./google-sheets-api");
 
 let authToken;
 const frontendWss = new WebSocket.Server({ port: 7071 });
@@ -30,6 +31,7 @@ function initServerMain(token){
     authToken = token;
    initGameSocket();
    initCaptureServers();
+   initGoogleSheets();
 }
 
 function handleWsMessage(rawMessage, ws){

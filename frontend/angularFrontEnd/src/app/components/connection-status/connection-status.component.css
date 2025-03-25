@@ -3,3 +3,9 @@
   color: #fdfafd;
   height: 100%;
 }
+
+p{
+  color:#444444;
+  font-size: small;
+  padding:5px;
+}

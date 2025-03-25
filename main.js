@@ -26,7 +26,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
   createWindow()
   ipcMain.handle('ping', () => 'pong')
-  server.initServerMain(auth.token)
+  server.initServerMain(auth.startgg.token);
 })
 
 

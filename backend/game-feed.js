@@ -2,6 +2,8 @@ const { closeSync } = require('original-fs');
 const WebSocket = require('ws');
 
 const retryInterval = 1000;
+const retryCountMax = 5;
+let retryCount = 0;
 
 //checking previous states
 const prevP1State = {
@@ -34,8 +36,15 @@ function initGameSocket(){
     }
 
     gameSocket.onerror = (msg) => {
-        console.log("unable to connect to game socket, retrying in " + retryInterval +"ms");
-        setTimeout(initGameSocket, retryInterval);
+
+        if (retryCount < retryCountMax){
+            retryCount++;
+            console.log("unable to connect to game socket, retrying in " + retryInterval +"ms , Retry number : " + retryCount);
+            setTimeout(initGameSocket, retryInterval);
+        }
+        else {
+            console.log("Strive Connection retry limit reached : " + retryCount);
+        }
     }
 }
 
