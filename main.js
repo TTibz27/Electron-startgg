@@ -2,7 +2,7 @@ console.log("'Ello Gov'nah!");
 const { app, BrowserWindow, ipcMain } = require('electron/main')
 const path = require('node:path')
 const auth = require('./auth.js');
-const server = require('./backend/backend-main.js');
+const server = require('./src/backend/backend-main.js');
   
 const iconPath = path.join(__dirname,  "favicon.ico");
 
@@ -18,7 +18,7 @@ const createWindow = () => {
       },
       icon: iconPath
   })
-  win.loadFile('./frontend/angularFrontEnd/dist/angular-front-end/browser/index.html')
+  win.loadFile('./src/frontend/angularFrontEnd/dist/angular-front-end/browser/index.html')
 }
 
 

@@ -1,4 +1,4 @@
-cd .\frontend\angularFrontEnd\
+cd .\src\frontend\angularFrontEnd\
 call ng build
 cd ..\..\
 call npm start run

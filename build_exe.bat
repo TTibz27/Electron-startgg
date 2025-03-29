@@ -1,4 +1,4 @@
-cd .\frontend\angularFrontEnd\
+cd .\src\frontend\angularFrontEnd\
 call ng build
-cd ..\..\
+cd ..\..\..\
 call electron-packager ./ jeeklyMissionControl --platform=win32 --arch=x64 --overwrite
