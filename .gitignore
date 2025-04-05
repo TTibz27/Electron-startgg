@@ -9,4 +9,4 @@ package-lock.json
 /token.json
 /jeeklyMissionControlMod-win32-x64/
 /jeeklyMissionControlAdmin-win32-x64/
-/environments/
+/environments/*.json
