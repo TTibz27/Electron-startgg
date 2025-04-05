@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import {Observable, Subject} from "rxjs";
+import {filter, Observable, Subject} from "rxjs";
 import {MessageTypeEnum} from "../message-type-enum";
+import {SettingsService} from "./settings.service";
+import {devOnlyGuardedExpression} from "@angular/compiler";
 
 @Injectable({
   providedIn: 'root'
@@ -12,18 +14,24 @@ export class BackendSocketServiceService {
   public BackendWS : Observable<any>;
   private _backendWsSubject : Subject<any>;
 
-  constructor() {
+  constructor(private settings : SettingsService) {
    this.backendSocket = new WebSocket('ws://localhost:7071');
     this._backendWsSubject  = new Subject();
     this.BackendWS = this._backendWsSubject.asObservable();
     this.backendSocket.onopen = () => {
       console.log('Backend connected');
       this.backendSocket.send(JSON.stringify({
-        type : MessageTypeEnum.FRONTEND_CONNECT_CONFIRMATION,
+        type : MessageTypeEnum.FRONTEND_CONNECT_REQUEST,
       }));
       this.backendSocket.onmessage = (msg) => {
         console.log(msg);
-        this._backendWsSubject.next(JSON.parse(msg.data));
+        const deserializedMsg = JSON.parse(msg.data);
+        this._backendWsSubject.next(deserializedMsg);
+         if( deserializedMsg.type === MessageTypeEnum.FRONTEND_CONNECT_CONFIRM){
+           console.log("setting being applied .. . . . ");
+           console.log(deserializedMsg.reply);
+           settings.settingsSubject.next(deserializedMsg.reply);
+         }
       };
       // get latest update now that socket connection exists
       this.sendAllApiStatusRequest();

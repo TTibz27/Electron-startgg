@@ -11,12 +11,12 @@ backendSocket.onopen = () => {
 };
 backendSocket.onmessage = (rawMsg) => {
     const msg = JSON.parse(rawMsg.data)
-     //console.log(msg);
+     console.log(msg);
     handleMessage(msg)
 }
 
 function handleMessage(msg){
-  if (msg.type === 7 ){ //GET_TOP_8_UPDATE: 7
+  if (msg.type === 10 ){ //GET_TOP_8_UPDATE:10
     console.log(msg.top8);
     let data =msg.top8;
       for (const round in data) {
@@ -43,7 +43,6 @@ function handleMessage(msg){
     if (data.set_id === "E" && data.player1_name !== "" && data.player2_name !== "" ){
         document.getElementById("GrandFinalsReset").classList.remove('HideGFR');
     }
-    console.log
     const player1name = data.player1_name;
     const player2name = data.player2_name;
     console.log(data.player1_score);

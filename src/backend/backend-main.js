@@ -2,12 +2,15 @@ const apiRequests = require('./api-requests');
 const WebSocket = require('ws');
 const { initGameSocket } = require('./game-feed');
 const {MessageType} = require ('./message-type-enum');
-const {initCaptureServers} = require("./capture-server");
+const {initOutputViewServer} = require("../ObsCaptureViews/capture-server");
 const {data_top8Data} = require("./api_requested_data");
 const {initGoogleSheets} = require("./google-sheets-api");
+const env = require('../../environments/env.json');
+
 
 let authToken;
-const frontendWss = new WebSocket.Server({ port: 7071 });
+
+
 const clients = new Map(); // holds all active WS connections
 const top8refreshInterval = 1;
 
@@ -17,6 +20,7 @@ let isGoogleSheetsAuthed = false;
 let isStriveConnected = false;
 
 // init server
+const frontendWss = new WebSocket.Server({ port: 7071 });
 frontendWss.on('connection', (ws) => {
     const id = Date.now();
 
@@ -26,15 +30,21 @@ frontendWss.on('connection', (ws) => {
     };
 });
 
+
 // inits after main.js call
 function initServerMain(token){
     console.log("init server main");
     authToken = token;
-   initGameSocket();
-   initCaptureServers();
-   initGoogleSheets().then(
+
+    if (env.env === 'dev') {
+        initGameSocket(); // only connect to game socket if dev ATM
+    }
+
+    initOutputViewServer();
+    initGoogleSheets().then(
         ()=>{ console.log("Auth successful!");
-          sendGoogleAuthMessage(true);
+            isGoogleSheetsAuthed = true;
+          sendGoogleAuthMessage();
         }).catch(console.error);
 }
 
@@ -45,6 +55,15 @@ function handleWsMessage(rawMessage, ws){
         return;
     }
    const msg = JSON.parse(rawMessage.data);
+
+    if (msg.type === MessageType.FRONTEND_CONNECT_REQUEST){
+        console.log("connection request received, sending reply ");
+        ws.send(JSON.stringify({
+            type: MessageType.FRONTEND_CONNECT_CONFIRM,
+            reply: env,
+            success: true
+        }));
+    }
     if (msg.type === MessageType.GET_TOP_8_REQUEST){
         if(!isStartGGPollingActive){
            startTop8Data(msg.request?.slug, ws ,(success)=>{
@@ -78,7 +97,7 @@ function startTop8Data(slug, ws, callback){
     }
 
     let success = apiRequests.pollTop8Data(authToken, slug, callback);
-    setInterval(updateTop8, top8refreshInterval * 1000);
+    if (env.env !== 'mod') { setInterval(updateTop8, top8refreshInterval * 1000);} // we only want admin to be able to do this for now
     isStartGGPollingActive = true;
 }
 
@@ -106,7 +125,6 @@ function sendGoogleAuthMessage(){
             })
         );
     });
-    //setInterval(()=>{sendGoogleAuthMessage,2000);
 }
 
 module.exports = {

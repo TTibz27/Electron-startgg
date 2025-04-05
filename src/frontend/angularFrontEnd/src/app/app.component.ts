@@ -27,8 +27,7 @@ export class AppComponent {
 
 
   }
-  constructor() {
+  constructor(  ) {
     // renderer
-
   }
 }

@@ -5,3 +5,8 @@ package-lock.json
 /jeeklyMissionControl-win32-x64/
 /google-credentials.json
 /jeeklyMissionControl-win32-x64.7z
+/build_exe_prod.bat
+/token.json
+/jeeklyMissionControlMod-win32-x64/
+/jeeklyMissionControlAdmin-win32-x64/
+/environments/

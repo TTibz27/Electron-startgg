@@ -1,0 +1,6 @@
+this folder must contain a file - env.json. that file must bei in the following json format
+{
+  "env": "admin or mod or dev",
+  "startggKey": "3333333333333",
+  "buildDate": "this field gets added by the date_json script"
+}

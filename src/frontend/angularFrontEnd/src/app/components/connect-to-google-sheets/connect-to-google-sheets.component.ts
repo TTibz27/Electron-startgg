@@ -30,7 +30,7 @@ export class ConnectToGoogleSheetsComponent implements OnInit{
       console.log(" ---async hit ---");
       console.log(msg);
       if (msg.reply?.api_service_name === "GOOGLE"){
-        this.isGoogleAuthed = true;
+        this.isGoogleAuthed = msg.success;
         const now = Date.now();
         this.lastUpdateDuration = (now - this.lastReceivedTime) / 1000;
         this.lastReceivedTime = now;
