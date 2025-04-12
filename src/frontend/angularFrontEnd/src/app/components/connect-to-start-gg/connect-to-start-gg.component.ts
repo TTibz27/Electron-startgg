@@ -4,6 +4,8 @@ import {BackendSocketServiceService} from "../../services/backend-socket-service
 import {filter, take} from "rxjs";
 import {MessageTypeEnum} from "../../message-type-enum";
 import {NgClass, NgIf} from "@angular/common";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 @Component({
@@ -13,7 +15,8 @@ import {NgClass, NgIf} from "@angular/common";
     ReactiveFormsModule,
     FormsModule,
     NgIf,
-    NgClass
+    NgClass,
+    CdkCopyToClipboard
   ],
   templateUrl: './connect-to-start-gg.component.html',
   styleUrl: './connect-to-start-gg.component.css'
@@ -25,7 +28,8 @@ export class ConnectToStartGGComponent implements OnInit{
   private lastRecievedTime: number;
   public readonly top8URL = " http://localhost:2369/top8/";
 
-  constructor(private socketService: BackendSocketServiceService){
+  constructor(private socketService: BackendSocketServiceService,
+              private snackbar: MatSnackBar){
     this.startggURL = "";
     this.isApiRequestRunning = false;
     this.lastUpdateDuration = 0;
@@ -50,28 +54,33 @@ export class ConnectToStartGGComponent implements OnInit{
   public submitURL(){
     console.log("Testing");
     console.log(this.startggURL);
-    this.socketService.BackendWS.pipe(filter( msg => msg.type === MessageTypeEnum.GET_TOP_8_REPLY), take(1)).subscribe(()=>{
+    this.socketService.BackendWS.pipe(filter( msg => msg.type === MessageTypeEnum.GET_TOP_8_REPLY), take(1)).subscribe((data)=>{
       console.log("reply hit");
-      this.isApiRequestRunning = true;
+      console.log(data);
+      if (data.success){
+        this.isApiRequestRunning = true;
+      }
+      else {
+        this.snackbar.open("Error: " + data.reply, "Dismiss");
+      }
+
     });
     this.socketService.sendTop8Request(this.startggURL);
   }
 
-  public copyTop8 (){
+  public async copyTop8Link (){
     // Get the text field
-    let copyText = document.getElementById("Top8UrlSpan");
-    if (copyText === null){
-      return;
-    }
+    const textSource = document.getElementById('Top8UrlInput');
+    if (textSource) {
+      let copyText = textSource.textContent ?  textSource.textContent : '';
 
-    // // Select the text field
-    // copyText.select();
-    // copyText.setSelectionRange(0, 99999); // For mobile devices
-    //
-    // // Copy the text inside the text field
-    // navigator.clipboard.writeText(copyText.value);
-    //
-    // // Alert the copied text
-    // alert("Copied the text: " + copyText.value);
+
+    console.log("Copying text: " + copyText);
+
+    const clipboardItemData = {
+      "text/plain": "http://localhost:2369/top8/",
+    };
+    await navigator.clipboard.write([new ClipboardItem(clipboardItemData)]);
+    }
   }
 }

@@ -9,7 +9,7 @@
       StartGG API connected!
     </div>
     <div>last update : {{lastUpdateDuration}} seconds</div>
-    <div> <span class="captureSourceLabel">Top 8 capture source: </span>  <input id="Top8UrlSpan" value="{{top8URL}}" />  <button (click)="copyTop8()">Copy</button> </div>
+    <div> <span class="captureSourceLabel">Top 8 capture source: </span>  <input id="Top8UrlInput" value="{{top8URL}}" />  <button [cdkCopyToClipboard]="top8URL">Copy</button> </div>
   </div>
 </div>
 

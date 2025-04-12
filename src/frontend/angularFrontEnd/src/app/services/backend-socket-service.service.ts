@@ -91,7 +91,8 @@ export class BackendSocketServiceService {
         if(urlChunks[i] == "tournament") {
           startIndex = i;
         }
-        if (urlChunks[i] == "event") {
+        if (urlChunks[i] == "event" || urlChunks[i] == "events" ) {
+          urlChunks[i] = "event"; // truncate S in case of events
           endIndex = i + 2; // this goes up by to to grab event name and this chunk
         }
     }

@@ -157,6 +157,7 @@ const getSetEntrantsQuery = `query SetEntrants($setId: ID!) {
 
   // ---- Get Event ID ---- //
 function pollTop8Data(authToken, slug, callback = null){
+    console.log("pollTop8Data start");
   if (slug == null){
     console.error("Error: no slug provided.");
       if ( typeof callback === 'function'){
@@ -181,6 +182,13 @@ function pollTop8Data(authToken, slug, callback = null){
 
         
         console.log('getting data from event :', rsp.data?.event?.name);
+        if (!rsp.data?.event?.name) {
+            console.log("Invalid");
+            if ( typeof callback === 'function'){
+                callback(false);
+            }
+            return false;
+        }
         let date = Date(rsp.data.event.startAt);
         console.log(date.toString());
         console.log("---------------------------------------------------------------------");
@@ -260,7 +268,7 @@ function pollTop8Data(authToken, slug, callback = null){
             });
         
     });
-
+    return true;
 }
 
 

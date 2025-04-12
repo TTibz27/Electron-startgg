@@ -11,7 +11,7 @@ body {
 .setContainer{
     height: 135px;
     width: 403px;
-    background-image: url('img_1.png');
+    /*background-image: url('img_1.png');*/
     background-repeat: no-repeat;
     color: #fefefe;
     text-shadow:1px 1px 5px #5D5C5C, 1px 1px 5px #3D3C3C;
@@ -48,18 +48,31 @@ body {
     margin-top:4%;
 }
 .playerContainer{
+    position: relative;
+    z-index: 50;
     margin-left: 70px;
+    background-color: #f10505;
+    border-radius: 25px;
+    height: 52px;
 
 }
 .player1Container{
     margin-top: 5px;
 }
 .player2Container{
-    margin-top: 38px;
+    margin-top: 10px;
+
 }
 .score{
-    float:right;
-    margin-right:35px;
+    /* float: right; */
+    /* margin-right: 35px; */
+    margin-left: 20px;
+    padding: 7px;
+    /* text-align: center; */
+    /* letter-spacing: 10px; */
+    display: inline-block;
+    width: 10%;
+    font-style: italic;
 }
 .lossIndication{
     color: #a3a3a3;
@@ -85,4 +98,57 @@ body {
 }
 .HideGFR{
     visibility: hidden;
+}
+.name-span {
+    z-index: 100;
+    display: inline-grid;
+    background-color: #3C3C3C;
+    /* width: 120px; */
+    width: 72%;
+    padding: 7px;
+    border-left: 2px solid #3C3C3C;
+    border-right: 1px solid #3C3C3C;
+    height: 38px;
+}
+.name-triangle{
+    z-index: 99;
+    width: 0;
+    height: 0;
+    left: -5px;
+    position: absolute;
+    border-top: 26px solid transparent;
+    border-bottom: 26px solid transparent;
+    border-left: 22px solid #3C3C3C;
+}
+.name-triangle-anchor{
+    position: relative;
+}
+.name-triangle-left{
+    z-index: 99;
+    width: 0;
+    height: 0;
+    left: -22px;
+    position: absolute;
+    border-top: 26px solid transparent;
+    border-bottom: 26px solid transparent;
+    border-right: 22px solid #3C3C3C;
+}
+.name-triangle-left-anchor{
+    position: relative;
+}
+.player-connector-anchor {
+    position: relative;
+    z-index: 20;
+}
+.player-connector {
+    position: absolute;
+    top: 29px;
+    left: 23px;
+    height: 58px;
+    width: 100px;
+    border-left: 4px solid #3C3C3C;
+    border-top: 4px solid #3C3C3C;
+    border-bottom: 4px solid #3C3C3C;
+    border-radius: 15px;
+    z-index: 0;
 }

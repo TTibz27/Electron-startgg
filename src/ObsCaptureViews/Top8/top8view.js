@@ -6,7 +6,7 @@ const backendSocket = new WebSocket('ws://localhost:7071');
 backendSocket.onopen = () => {
     console.log('Backend connected');
     backendSocket.send(JSON.stringify({
-        requestType:"ConnectedConfirmation",
+        requestType:"GET_TOP_8_REQUEST",
     }));
 };
 backendSocket.onmessage = (rawMsg) => {

@@ -14,6 +14,8 @@ let authToken;
 const clients = new Map(); // holds all active WS connections
 const top8refreshInterval = 1;
 
+let startGGinterval;
+
 // hold onto data here
 let isStartGGPollingActive = false;
 let isGoogleSheetsAuthed = false;
@@ -41,11 +43,14 @@ function initServerMain(token){
     }
 
     initOutputViewServer();
-    initGoogleSheets().then(
-        ()=>{ console.log("Auth successful!");
-            isGoogleSheetsAuthed = true;
-          sendGoogleAuthMessage();
-        }).catch(console.error);
+
+    // disabling google sheets for the time being
+
+    // initGoogleSheets().then(
+    //     ()=>{ console.log("Auth successful!");
+    //         isGoogleSheetsAuthed = true;
+    //       sendGoogleAuthMessage();
+    //     }).catch(console.error);
 }
 
 function handleWsMessage(rawMessage, ws){
@@ -65,15 +70,17 @@ function handleWsMessage(rawMessage, ws){
         }));
     }
     if (msg.type === MessageType.GET_TOP_8_REQUEST){
-        if(!isStartGGPollingActive){
            startTop8Data(msg.request?.slug, ws ,(success)=>{
                ws.send(JSON.stringify({
                    type: MessageType.GET_TOP_8_REPLY,
-                   reply: success? " API request succeeded!": "Error encountered with API request",
+                   reply: success? " API request succeeded!": "Error encountered with API request, check URL and try again.",
                    success: success
                }));
+               if (success === false){
+                   isStartGGPollingActive = false;
+                   clearInterval( startGGinterval);
+               }
            });
-        }
     }
     if (msg.type === MessageType.API_CONNECT_REQUEST){
         if (msg.request?.api_service_name === "ALL") {
@@ -87,6 +94,7 @@ function handleWsMessage(rawMessage, ws){
 }
 
 function startTop8Data(slug, ws, callback){
+    console.log("startTop8Data backend-main start");
     if (typeof slug !== 'string'){
         ws.send(JSON.stringify({
             type: MessageType.GET_TOP_8_REPLY,
@@ -97,7 +105,9 @@ function startTop8Data(slug, ws, callback){
     }
 
     let success = apiRequests.pollTop8Data(authToken, slug, callback);
-    if (env.env !== 'mod') { setInterval(updateTop8, top8refreshInterval * 1000);} // we only want admin to be able to do this for now
+    if (env.env !== 'mod' && isStartGGPollingActive === false && success === true) {
+        startGGinterval =   setInterval(updateTop8, top8refreshInterval * 1000);
+    } // we only want admin to be able to do this for now
     isStartGGPollingActive = true;
 }
 
